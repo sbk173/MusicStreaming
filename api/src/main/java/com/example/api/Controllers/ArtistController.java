@@ -1,6 +1,6 @@
 package com.example.api.Controllers;
 
-import com.example.api.Services.UserService;
+import com.example.api.Services.ArtistService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -12,20 +12,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/user")
-
-public class UserController{
-    final private UserService userService;
+@RequestMapping("/api/artist")
+public class ArtistController{
+    final private ArtistService artistService;
 
     @Autowired
-    public UserController(UserController userService) {
-        this.userService = userService;
+    public ArtistController(ArtistController artistService) {
+        this.artistService = artistService;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> RegUser(@RequestBody User user){
+    public ResponseEntity<?> RegArtist(@RequestBody Artist artist){
         try{
-            userService.registerUser(user);
+            artistService.registerArtist(artist);
             return new ResponseEntity<>(HttpStatus.CREATED); 
         }
         catch (Exception e){
@@ -34,10 +33,10 @@ public class UserController{
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/profile/{userid}")
-    public ResponseEntity<?> getInfo(@PathVariable Long userid){
+    @GetMapping("/profile/{artistid}")
+    public ResponseEntity<?> getInfo(@PathVariable Long artistid){
         try{
-            User response = userService.getUser(userid);
+            Artist response = artistService.getArtist(artistid);
             return new ResponseEntity<>(response,HttpStatus.OK); 
         }
         catch (Exception e){
@@ -50,7 +49,7 @@ public class UserController{
     @GetMapping("login/{username}/{password}")
     public ResponseEntity<?> login(@PathVariable("username") String user_name, @PathVariable("password") String password){
         try{
-            User response = userService.login(user_name,password);
+            Artist response = artistService.login(user_name,password);
             return new ResponseEntity<>(response,HttpStatus.OK); 
         }
         catch (Exception e){
