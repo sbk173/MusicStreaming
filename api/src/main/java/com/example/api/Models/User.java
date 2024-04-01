@@ -1,10 +1,10 @@
 package com.example.api.Models;
 
+import java.util.HashSet;
 import java.util.List;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import java.util.Set;
+
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,6 @@ import com.example.api.Models.Playlist;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,5 +25,7 @@ public class User {
     private List<Song> preference;
     private List<Song> history;
     private String filename;
-    private List<Playlist> playlists;
+
+    @ManyToMany(mappedBy = "users")
+    private Set<Playlist> playlists = new HashSet<>();
 }

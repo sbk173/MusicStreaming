@@ -1,12 +1,12 @@
 package com.example.api.Models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -21,6 +21,9 @@ public class Song {
     private String genre;
     private String duration;
     private String filename;
+
+    @ManyToMany(mappedBy = "songs")
+    private Set<Playlist> playlists = new HashSet<>();
 }
 
 

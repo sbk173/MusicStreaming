@@ -1,5 +1,6 @@
 package com.example.api.Controllers;
 
+import com.example.api.Models.User;
 import com.example.api.Services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class UserController{
     final private UserService userService;
 
     @Autowired
-    public UserController(UserController userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 

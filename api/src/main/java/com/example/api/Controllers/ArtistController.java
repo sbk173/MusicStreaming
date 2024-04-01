@@ -1,5 +1,6 @@
 package com.example.api.Controllers;
 
+import com.example.api.Models.Artist;
 import com.example.api.Services.ArtistService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class ArtistController{
     final private ArtistService artistService;
 
     @Autowired
-    public ArtistController(ArtistController artistService) {
+    public ArtistController(ArtistService artistService) {
         this.artistService = artistService;
     }
 

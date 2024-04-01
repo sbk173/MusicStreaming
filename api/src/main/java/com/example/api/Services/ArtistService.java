@@ -25,7 +25,7 @@ public class ArtistService {
 
     public Artist registerArtist(Artist artist){
         // Fill here
-        String user_name = artist.username;
+        String user_name = artist.getUsername();
         Optional<Artist> temp = artistRepo.findByUsername(user_name);
         if (!temp.isPresent()){
             try{
@@ -44,10 +44,10 @@ public class ArtistService {
     public Artist login(String user_name, String pass){
         // Fill here
         try{
-            Optional<Artist> response = artistRepo.findByUsername();
+            Optional<Artist> response = artistRepo.findByUsername(user_name);
             if (response.isPresent()){
                 Artist a = response.get();
-                if (a.password.equals(pass)){
+                if (a.getPassword().equals(pass)){
                     return a;
                 }
             }

@@ -4,15 +4,9 @@ package com.example.api.Services;
 import com.example.api.Models.User;
 import com.example.api.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import java.io.IOException;
-import java.util.List;
+
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -25,7 +19,7 @@ public class UserService {
 
     public User registerUser(User user){
         // Fill here
-        String user_name = user.username;
+        String user_name = user.getUsername();
         Optional<User> temp = userRepo.findByUsername(user_name);
         if (!temp.isPresent()){
             try{
@@ -44,10 +38,10 @@ public class UserService {
     public User login(String user_name, String pass){
         // Fill here
         try{
-            Optional<User> response = userRepo.findByUsername();
+            Optional<User> response = userRepo.findByUsername(user_name);
             if (response.isPresent()){
                 User u = response.get();
-                if (u.password.equals(pass)){
+                if (u.getPassword().equals(pass)){
                     return u;
                 }
             }
