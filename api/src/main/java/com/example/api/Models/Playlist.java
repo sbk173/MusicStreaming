@@ -14,7 +14,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-
 public class Playlist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

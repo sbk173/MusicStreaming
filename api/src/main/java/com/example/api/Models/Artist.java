@@ -20,6 +20,7 @@ public class Artist {
     private Long id;
     private String username;
     private String password;
+    private String email;
     private String description;
     private List<Song> uploads;
 }

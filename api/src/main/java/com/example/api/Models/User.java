@@ -22,9 +22,9 @@ public class User {
     private String username;
     private String password;
     private String email;
-    private List<Song> preference;
-    private List<Song> history;
-    private String filename;
+//    private List<Song> preference;
+//    private List<Song> history;
+
 
     @ManyToMany(mappedBy = "users")
     private Set<Playlist> playlists = new HashSet<>();
