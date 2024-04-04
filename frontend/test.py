@@ -1,12 +1,12 @@
 import streamlit as st
 import requests
 from io import BytesIO
-from pydub import AudioSegment
 
 # Function to fetch and play MP3 file
 def play_mp3_from_backend():
-    backend_url = 'http://localhost:8080/api/song/download/f8424db8-c25d-4183-96fa-b9a74e82c709_Tourner-Dans-Le-Vide.mp3'
+    backend_url = 'http://localhost:8080/api/song/download/16b99fb7-417e-4438-8ff3-12d30fd80d58_The_Lon_of_Chabu.mp3'
     response = requests.get(backend_url)
+    st.write(response.content)
     
     if response.status_code == 200:
         st.audio(response.content, format='audio/mp3')
