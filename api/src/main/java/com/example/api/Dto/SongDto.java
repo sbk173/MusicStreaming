@@ -1,5 +1,6 @@
 package com.example.api.Dto;
 
+import com.example.api.Models.Artist;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,5 +15,6 @@ public class SongDto {
     private String genre;
     private String duration;
     private String filename;
+    private Long artistid;
 }
 

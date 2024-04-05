@@ -20,11 +20,12 @@ import java.util.stream.Collectors;
 public class SongService {
     final private SongRepository songRepo;
     final private LocalFileStorageService storage;
-
+    final private ArtistService artistService;
     @Autowired
-    public SongService(SongRepository songRepo, LocalFileStorageService storage) {
+    public SongService(SongRepository songRepo, LocalFileStorageService storage, ArtistService artistService) {
         this.songRepo = songRepo;
         this.storage = storage;
+        this.artistService = artistService;
     }
 
     public void uploadSong(MultipartFile file, SongDto song){
@@ -57,6 +58,7 @@ public class SongService {
         song.setArtist(songDto.getArtist());
         song.setGenre(songDto.getGenre());
         song.setFilename(songDto.getFilename());
+        song.setArtistid(songDto.getArtistid());
         return song;
     }
 
@@ -98,6 +100,13 @@ public class SongService {
         return song.getTitle().toLowerCase().contains(context.toLowerCase()) ||
                 song.getArtist().toLowerCase().contains(context.toLowerCase()) ||
                 song.getGenre().toLowerCase().contains(context.toLowerCase());
+    }
+
+    public List<Song> getAllSongsByArtist(Long id){
+        Optional<List<Song>> songs = songRepo.findAllByArtistid(id);
+        if(songs.isPresent()) return songs.get();
+        throw new RuntimeException("No Songs");
+
     }
 
 }

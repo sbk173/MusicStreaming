@@ -36,19 +36,20 @@ def Profile():
         url = f"http://localhost:8080/api/{actor.lower()}/profile/{user_id}"
         response = requests.get(url)
         if st.session_state['actor'] == 'Artist':
-            get_songs_list_url = f'http://localhost:8080/api/{actor.lower()}/{user_id}/getAllSongsByArtist'
+            get_songs_list_url = f'http://localhost:8080/api/song/getSongByArtist/{user_id}'
             songs_list = requests.get(get_songs_list_url)
             songs = []
             if songs_list.status_code == 200:
                 songs = json.loads(songs_list.content.decode('utf-8').replace("'",'"'))
-                st.write(songs)
         if response.status_code == 200:
             user_profile = json.loads(response.content.decode('utf-8').replace("'",'"'))
             for i in user_profile:
-                if i != "songs":
-                    st.write(i + ": " + str(user_profile[i]))
-                elif songs != []:
-                    st.write(i + ": " + str(songs))
+                st.write(i + ": " + str(user_profile[i]))
+            song_set = []
+            for i in songs:
+                song_set.append((str(i["title"]) + " - " + str(i["genre"])))
+            if song_set != []:
+                st.write("Songs: " + ", ".join(song_set))
 
 def login_section():
     st.subheader("Login")
@@ -84,7 +85,7 @@ def register_section():
         status_code = response.status_code
         if status_code == 201:
             st.success(f"{actor} Successfully Registered!")
-            time.sleep(5)
+            time.sleep(1)
             return True
         else:
             st.error(f"Registration Failed. Try again later {status_code}")

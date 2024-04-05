@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.logging.log4j.message.StringFormattedMessage;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -22,13 +23,10 @@ public class Song implements Serializable {
     private String genre;
     private String duration;
     private String filename;
+    private Long artistid;
 
     @ManyToMany(mappedBy = "songs")
     private Set<Playlist> playlists = new HashSet<>();
-
-    @ManyToOne
-    @JoinColumn(name = "artist_id") // Specify the foreign key column
-    private Artist song_artist;
 
 }
 

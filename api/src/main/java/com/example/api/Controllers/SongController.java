@@ -1,6 +1,7 @@
 package com.example.api.Controllers;
 
 import com.example.api.Dto.SongDto;
+import com.example.api.Models.Song;
 import com.example.api.Services.SongService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/song")
@@ -77,6 +79,12 @@ public class SongController {
     public ResponseEntity<?> deleteSong(@PathVariable Long id){
         songService.deleteSong(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/getSongByArtist/{id}")
+    public ResponseEntity<?> getSonByArtist(@PathVariable Long id){
+        List<Song> songs = songService.getAllSongsByArtist(id);
+        return new ResponseEntity<>(songs,HttpStatus.OK);
     }
 
 }

@@ -52,17 +52,16 @@ else:
         hours, minutes, seconds = audio_duration(duration)
         st.write("Song_duration = {}:{}:{}".format(hours, minutes, seconds))
         url = 'http://localhost:8080/api/song/upload'
-        artist_update_url = f'http://localhost:8080/api/artist/{user_id}/addSongToArtist'
         files = {}
         files["file"] = uploaded_song
         data ={"title":title,
                "artist":artist,
                "genre":genre,
                "duration": duration,
-               "filename":file_name}
+               "filename":file_name,
+               "artistid": user_id}
         if st.button("Upload"):
             response = requests.post(url, files=files,data={"data":json.dumps(data)})
-            artist_response = requests.patch(artist_update_url, data={"data":json.dumps(data)})
             if response.status_code == 201:
                 st.success("File uploaded successfully!")
             else:

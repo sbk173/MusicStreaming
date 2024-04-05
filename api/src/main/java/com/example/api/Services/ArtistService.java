@@ -77,24 +77,5 @@ public class ArtistService {
         
     }
 
-    public List<Song> getAllSongsByArtist(Long id){
-        Optional<Artist> artist = artistRepo.findById(id);
-        if(artist.isPresent()){
-            Artist temp = artist.get();
-            return temp.getSongs();
-        }
-        else {
-            throw new RuntimeException("No such artist");
-        }
-    }
-
-    public void addSongToArtist(Long id,Song song){
-        Optional<Artist> artist = artistRepo.findById(id);
-        if(artist.isPresent()){
-            Artist temp = artist.get();
-            temp.getSongs().add(song);
-            artistRepo.save(temp);
-        }
-    }
 
 }

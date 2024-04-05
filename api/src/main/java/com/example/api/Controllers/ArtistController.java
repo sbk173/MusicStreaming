@@ -60,14 +60,4 @@ public class ArtistController{
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/{id}/getAllSongsByArtist")
-    public ResponseEntity<?> getAllSongsByArtist(@PathVariable Long id){
-        return new ResponseEntity<List<Song>>(artistService.getAllSongsByArtist(id),HttpStatus.OK);
-    }
-
-    @PatchMapping("/{id}/addSongToArtist")
-    public ResponseEntity<?> addSongToArtist(@PathVariable Long id, @RequestBody Song song){
-        artistService.addSongToArtist(id,song);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }
