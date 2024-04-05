@@ -1,6 +1,7 @@
 package com.example.api.Controllers;
 
 import com.example.api.Models.Artist;
+import com.example.api.Models.Song;
 import com.example.api.Services.ArtistService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,16 @@ public class ArtistController{
             e.printStackTrace();
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 
+    @GetMapping("/{id}/getAllSongsByArtist")
+    public ResponseEntity<?> getAllSongsByArtist(@PathVariable Long id){
+        return new ResponseEntity<List<Song>>(artistService.getAllSongsByArtist(id),HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/addSongToArtist")
+    public ResponseEntity<?> addSongToArtist(@PathVariable Long id, @RequestBody Song song){
+        artistService.addSongToArtist(id,song);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

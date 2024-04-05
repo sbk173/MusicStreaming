@@ -25,6 +25,11 @@ public class Song implements Serializable {
 
     @ManyToMany(mappedBy = "songs")
     private Set<Playlist> playlists = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "artist_id") // Specify the foreign key column
+    private Artist song_artist;
+
 }
 
 

@@ -2,6 +2,7 @@ package com.example.api.Services;
 
 // import com.example.api.Dto.SongDto;
 import com.example.api.Models.Artist;
+import com.example.api.Models.Song;
 import com.example.api.Repository.ArtistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -74,6 +75,26 @@ public class ArtistService {
             throw new RuntimeException("Error");
         }
         
+    }
+
+    public List<Song> getAllSongsByArtist(Long id){
+        Optional<Artist> artist = artistRepo.findById(id);
+        if(artist.isPresent()){
+            Artist temp = artist.get();
+            return temp.getSongs();
+        }
+        else {
+            throw new RuntimeException("No such artist");
+        }
+    }
+
+    public void addSongToArtist(Long id,Song song){
+        Optional<Artist> artist = artistRepo.findById(id);
+        if(artist.isPresent()){
+            Artist temp = artist.get();
+            temp.getSongs().add(song);
+            artistRepo.save(temp);
+        }
     }
 
 }
