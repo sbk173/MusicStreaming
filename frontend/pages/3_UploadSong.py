@@ -48,6 +48,7 @@ else:
         artist = artist_profile["username"]
         file_name =  uploaded_song.name
         song = MP3(uploaded_song)
+        uploaded_song.seek(0)
         duration = int(song.info.length)
         hours, minutes, seconds = audio_duration(duration)
         st.write("Song_duration = {}:{}:{}".format(hours, minutes, seconds))
