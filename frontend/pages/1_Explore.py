@@ -37,6 +37,13 @@ if st.session_state.get("login") == "false":
     st.write("Please login first!")
     if st.button("Login"):
         st.switch_page('app.py')
+
+elif st.session_state.get("actor") == "Artist":
+        st.write("Please login as a user!")
+        if st.button("Login"):
+            st.session_state["login"] = "false"
+            st.switch_page('app.py')
+    
 else:
     url = 'http://localhost:8080/api/song/getAll'
     response = requests.get(url)
@@ -63,3 +70,4 @@ else:
             st.write("---")
     else:
         st.error("Failed to fetch song list.")
+        

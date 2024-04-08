@@ -7,7 +7,7 @@ col1, col2, col3 = st.columns([1, 2, 1])
 col2.image("riff_logo.png")
 
 BASE_URL = "http://localhost:8080/api/playlist"
-song_queue = deque() 
+song_queue = deque()
 
 def playSong():
     if song_queue:
@@ -33,7 +33,14 @@ def main():
         st.write("Please login first!")
         if st.button("Login"):
             st.switch_page('app.py')
-        return 
+        return
+    
+    if st.session_state.get("actor") == "Artist":
+        st.write("Please login as a user!")
+        if st.button("Login"):
+            st.session_state["login"] = "false"
+            st.switch_page('app.py')
+        return
     
     st.title("Your Playlists")
 
@@ -69,7 +76,7 @@ def get_playlist():
             playlist = response.json()
             st.write(f"Playlist ID: {playlist['id']}, Name: {playlist['name']}")
             play_id = playlist['id']
-            display_songs_in_playlist(play_id) 
+            display_songs_in_playlist(play_id)
         else:
             st.error("Failed to fetch playlist.")
 
@@ -77,6 +84,7 @@ def get_playlist():
 
 def display_songs_in_playlist(play_id):
     playlist_data = requests.get(f"{BASE_URL}/getAllPlaylists").json()
+    st.write(playlist_data)
     st.header("Songs in Playlist")
     for playlist in playlist_data:
         playlist_id = playlist["id"]
