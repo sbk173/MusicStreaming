@@ -68,14 +68,13 @@ public class PlaylistService {
     }
 
     public List<Playlist> getAllPlaylistsByUserId(Long userId) {
-        return playlistRepository.findByUsersId(userId);
+        return playlistRepository.findPlaylistsByUserId(userId);
     }
 
-    public Set<Song> getAllSongsInPlaylist(Long playlistId) {
-        Optional<Playlist> playlist = playlistRepository.findById(playlistId);
+    public List<Song> getAllSongsInPlaylist(Long playlistId) {
+        Optional<List<Song>> playlist = playlistRepository.findSongsByPlaylistId(playlistId);
         if(playlist.isPresent()){
-            Set<Song> songs = playlist.get().getSongs();
-            return songs;
+            return playlist.get();
         }
         else throw new RuntimeException("Playlist Not found");
     }

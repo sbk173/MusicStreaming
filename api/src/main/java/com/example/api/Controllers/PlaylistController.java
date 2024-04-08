@@ -85,6 +85,6 @@ public class PlaylistController {
     public ResponseEntity<?> getAllSongsInPlaylist(@PathVariable Long playlistId){
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
         loggerService.log(timeStamp+" GET Request At /api/playlist/getSongs/"+ playlistId.toString());
-        return new ResponseEntity<Set<Song>>(playlistService.getAllSongsInPlaylist(playlistId),HttpStatus.OK);
+        return new ResponseEntity<List<Song>>(playlistService.getAllSongsInPlaylist(playlistId),HttpStatus.OK);
     }
 }
