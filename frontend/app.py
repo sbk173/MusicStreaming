@@ -9,6 +9,8 @@ if "actor" not in st.session_state:
     st.session_state["actor"] = "guest"
 if "user_id" not in st.session_state:
     st.session_state["user_id"] = 0
+if "queue" not in st.session_state:
+    st.session_state["queue"] = 0
 
 def switch_login_state():
     if st.session_state["login"] == "false":
