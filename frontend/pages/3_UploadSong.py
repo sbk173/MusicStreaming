@@ -26,13 +26,13 @@ col2.image("riff_logo.png")
 if st.session_state["login"] == "false":
     st.write("Please login first!")
     if st.button("Login"):
-        st.switch_page('app.py')
+        st.switch_page('Riff.py')
 
 elif st.session_state["actor"] == "User":
     st.write("Please signout and login as an artist to upload songs!")
     if st.button("Signout"):
         switch_login_state()
-        st.switch_page('app.py')
+        st.switch_page('Riff.py')
 
 else:
     user_id = st.session_state["user_id"]

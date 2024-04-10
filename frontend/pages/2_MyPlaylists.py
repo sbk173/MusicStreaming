@@ -4,6 +4,7 @@ import base64
 from collections import deque
 import time
 import pandas as pd
+from random import shuffle
 
 song_queue = deque()
 
@@ -48,6 +49,14 @@ def add_user_to_playlist():
         else:
             st.error("Failed to add user to playlist.")
 
+def get_audio_data(filename):
+    backend_url = f'http://localhost:8080/api/song/download/{filename}'
+    response = requests.get(backend_url)
+    if response.status_code == 200:
+        audio_data = response.content
+        return audio_data
+    return None
+
 def play_song(filename):
     backend_url = f'http://localhost:8080/api/song/download/{filename}'
     response = requests.get(backend_url)
@@ -81,27 +90,69 @@ def play_song(filename):
         st.error("Failed to fetch MP3 file from the backend")
         return False
 
-@st.cache
+# @st.cache
+# def play_playlist(play_id):
+#     playlist_data = requests.get(f"{BASE_URL}/getSongs/{play_id}").json()
+
+#     for song in playlist_data:
+#         filename = song['filename']
+#         song_queue.append(filename)
+
+#     while st.session_state["Playing_audio"]:
+#         if song_queue:
+#             filename = song_queue.popleft()
+#             st.session_state["Audio_completed"] = False
+#             play_song(filename)
+#             while not st.session_state["Audio_completed"]:
+#                 time.sleep(1)
+#             st.write(f"Song {filename} - playback complete")
+#         else:
+#             st.info("No songs in queue")
+#             st.session_state["Playing_audio"] = False
+#             time.sleep(3)
+
 def play_playlist(play_id):
     playlist_data = requests.get(f"{BASE_URL}/getSongs/{play_id}").json()
-
+    song_queue = []
     for song in playlist_data:
         filename = song['filename']
-        song_queue.append(filename)
-
-    while st.session_state["Playing_audio"]:
-        if song_queue:
-            filename = song_queue.popleft()
-            st.session_state["Audio_completed"] = False
-            play_song(filename)
-            while not st.session_state["Audio_completed"]:
-                time.sleep(1)
-            st.write(f"Song {filename} - playback complete")
+        audio_data = get_audio_data(filename)
+        if(audio_data):
+            song_queue.append([song['id'],audio_data])
+    
+    shuffle(song_queue)
+    merged_audio = None
+    for i in song_queue:
+        if merged_audio is None:
+            merged_audio = i[1]
         else:
-            st.info("No songs in queue")
-            st.session_state["Playing_audio"] = False
-            time.sleep(3)
-        
+            merged_audio += i[1]
+
+    audio_base64 = base64.b64encode(merged_audio).decode('utf-8')
+    audio_url = f'data:audio/mp3;base64,{audio_base64}'
+    
+    audio_html = f'''
+        <audio id="audio_player" controls autoplay>
+            <source src="{audio_url}" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+        <script>
+            // Wait for the audio player to be loaded
+            document.getElementById("audio_player").onloadeddata = function() {{
+                var audio = document.getElementById("audio_player");
+                audio.onended = function() {{
+                    // Notify Python that audio playback has ended
+                    st.setComponentValue(True, "Audio_complete");
+                }};
+            }};
+        </script>
+        '''
+    st.markdown(audio_html, unsafe_allow_html=True)
+
+    
+    
+
+
 
 def display_songs_in_playlist(play_id):
     st.header("Songs in Playlist")
@@ -141,17 +192,17 @@ actor = st.session_state.get("actor")
 if login_status == "false":
     st.write("Please login first!")
     if st.button("Login"):
-        st.switch_page('app.py')
+        st.switch_page('Riff.py')
 
 elif actor == "Artist":
     st.write("Please login as a user!")
     if st.button("Login"):
         st.session_state["login"] = "false"
-        st.switch_page('app.py')
+        st.switch_page('Riff.py')
 
 else:
     st.title("Your Playlists")
-    selected_feature = st.selectbox("", ["Create Playlist", "Get Playlist", "My Playlists", "Share Playlist"])
+    selected_feature = st.selectbox("", ["Get Playlist","Create Playlist",  "My Playlists", "Share Playlist"])
     if selected_feature == "Create Playlist":
         create_playlist()
     elif selected_feature == "Get Playlist":

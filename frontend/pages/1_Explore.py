@@ -67,13 +67,13 @@ col2.image("riff_logo.png")
 if st.session_state.get("login") == "false":
     st.write("Please login first!")
     if st.button("Login"):
-        st.switch_page('app.py')
+        st.switch_page('Riff.py')
 
 elif st.session_state.get("actor") == "Artist":
         st.write("Please login as a user!")
         if st.button("Login"):
             st.session_state["login"] = "false"
-            st.switch_page('app.py')
+            st.switch_page('Riff.py')
     
 else:
     search = st.text_input("Search")
