@@ -8,7 +8,6 @@ if 'conf' not in st.session_state:
 
 if 'button1' not in st.session_state:
     st.session_state.button1 = False
-
 def dataframe_with_selections(df):
     df_with_selections = df.copy()
 
@@ -77,7 +76,12 @@ elif st.session_state.get("actor") == "Artist":
             st.switch_page('app.py')
     
 else:
-    url = 'http://localhost:8080/api/song/getAll'
+    search = st.text_input("Search")
+    if search == "":
+        url = 'http://localhost:8080/api/song/getAll'
+        
+    else:
+        url = f'http://localhost:8080/api/song/search/{search}'
     response = requests.get(url)
     if response.status_code == 200:
         song_list = response.json()
@@ -121,4 +125,4 @@ else:
                 
 
     else:
-        st.error("Failed to fetch song list.")
+        st.error("No results Found")

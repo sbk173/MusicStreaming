@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 import json
 import time
+import pandas as pd
 
 if "login" not in st.session_state:
     st.session_state["login"] = "false"
@@ -46,6 +47,7 @@ def Profile():
         
         if response.status_code == 200:
             user_profile = json.loads(response.content.decode('utf-8').replace("'",'"'))
+            user_profile.pop('playlists')
             profile_data = []
             for key, value in user_profile.items():
                 profile_data.append({"Attribute": key, "Value": value})
@@ -54,7 +56,9 @@ def Profile():
                 for song in songs:
                     profile_data.append({"Attribute": "Song", "Value": f"{song['title']} - {song['genre']}"})
             
-            st.table(profile_data)
+            df = pd.DataFrame(profile_data)
+            st.dataframe(df.set_index(df.columns[0]),width = 500)
+
             
 def login_section():
     st.subheader("Login")
@@ -106,7 +110,7 @@ def main():
         with placeholder.container():
             col1, col2, col3 = st.columns([1,2,1])
             col2.image("riff_logo.png")
-            page = st.radio("Access", ["Login","Register"], index=0)
+            page = st.selectbox("",["Login","Register"])
             if page == "Login":
                 x = login_section()
             else:

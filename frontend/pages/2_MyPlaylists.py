@@ -3,6 +3,7 @@ import requests
 import base64
 from collections import deque
 import time
+import pandas as pd
 
 song_queue = deque()
 
@@ -15,20 +16,23 @@ def create_playlist():
     st.header("Create a New Playlist")
     playlist_name = st.text_input("Playlist Name")
     if st.button("Create Playlist"):
-        payload = {"name": playlist_name}
+        user_id = st.session_state["user_id"]
+        payload = {"name": playlist_name,"users":[{"id":user_id}]}
         response = requests.post(f"{BASE_URL}/addPlaylist", json=payload)
         if response.status_code == 201:
             st.success("Playlist created successfully!")
         else:
             st.error("Failed to create playlist.")
 
-def get_all_playlists():
-    st.header("All Playlists")
-    response = requests.get(f"{BASE_URL}/getAllPlaylists")
+def get_my_playlists():
+    st.header("My Playlists")
+    user_id = st.session_state["user_id"]
+    response = requests.get(f"{BASE_URL}/getPlaylists/{user_id}")
     if response.status_code == 200:
         playlists = response.json()
         df = [{"Playlist id": playlist['id'], "Name": playlist['name']} for playlist in playlists]
-        st.table(df)
+        df = pd.DataFrame(df)
+        st.dataframe(df.set_index(df.columns[0]),width=500)
     else:
         st.error("Failed to fetch playlists.")
 
@@ -147,12 +151,12 @@ elif actor == "Artist":
 
 else:
     st.title("Your Playlists")
-    selected_feature = st.selectbox("", ["Create Playlist", "Get Playlist", "All Playlists", "Add User to Playlist"])
+    selected_feature = st.selectbox("", ["Create Playlist", "Get Playlist", "My Playlists", "Share Playlist"])
     if selected_feature == "Create Playlist":
         create_playlist()
     elif selected_feature == "Get Playlist":
         get_playlist()
-    elif selected_feature == "All Playlists":
-        get_all_playlists()
-    elif selected_feature == "Add User to Playlist":
+    elif selected_feature == "My Playlists":
+        get_my_playlists()
+    elif selected_feature == "Share Playlist":
         add_user_to_playlist()
