@@ -2,11 +2,30 @@ package com.example.api.Services;
 
 // import com.example.api.Dto.SongDto;
 import com.example.api.Models.User;
+import com.example.api.Services.Handler;
 import com.example.api.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+public class AuthService{
+    private Handler handler;
+
+    public AuthService(Handler handle){
+        this.handler = handle;
+    }
+
+    public User login(String user_name,String pass){
+        Optional<User> temp = handler.handle(user_name,pass);
+        if (temp.isPresent()){
+            return temp.get();
+        }else {
+            throw new RuntimeException("Invalid username/password");
+        }
+        
+    }
+}
 
 @Service
 public class UserService {
@@ -35,16 +54,36 @@ public class UserService {
 
     }
 
+    // public User login(String user_name, String pass){
+    //     // Fill here
+    //     try{
+    //         Optional<User> response = userRepo.findByUsername(user_name);
+    //         if (response.isPresent()){
+    //             User u = response.get();
+    //             if (u.getPassword().equals(pass)){
+    //                 return u;
+    //             }
+    //         }
+    //         throw new RuntimeException("Incorrect username/password");
+            
+    //     }
+    //     catch(Exception e) {
+    //         throw new RuntimeException("Error logging in");
+    //     }
+
+    // }
+
     public User login(String user_name, String pass){
         // Fill here
         try{
-            Optional<User> response = userRepo.findByUsername(user_name);
-            if (response.isPresent()){
-                User u = response.get();
-                if (u.getPassword().equals(pass)){
-                    return u;
-                }
-            }
+            Handler handler = new userExistsCheckHandler(userRepo)
+                                .setNextHandler(new validPasswordHandler(userRepo));
+            
+            AuthService serv = new AuthService(handler);
+            Optional<User> temp = serv.login(user_name,pass);
+            if (temp.isPresent()){
+                return temp.get();
+            } 
             throw new RuntimeException("Incorrect username/password");
             
         }
@@ -53,6 +92,8 @@ public class UserService {
         }
 
     }
+
+
 
     public User getUser(Long id){
         try{
