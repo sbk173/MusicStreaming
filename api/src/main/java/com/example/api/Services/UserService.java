@@ -8,24 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
-public class AuthService{
-    private Handler handler;
-
-    public AuthService(Handler handle){
-        this.handler = handle;
-    }
-
-    public User login(String user_name,String pass){
-        Optional<User> temp = handler.handle(user_name,pass);
-        if (temp.isPresent()){
-            return temp.get();
-        }else {
-            throw new RuntimeException("Invalid username/password");
-        }
-        
-    }
-}
+import com.example.api.Services.AuthService;
 
 @Service
 public class UserService {
@@ -80,9 +63,11 @@ public class UserService {
                                 .setNextHandler(new validPasswordHandler(userRepo));
             
             AuthService serv = new AuthService(handler);
-            Optional<User> temp = serv.login(user_name,pass);
-            if (temp.isPresent()){
-                return temp.get();
+            boolean temp = serv.login(user_name,pass);
+            if (temp){
+                Optional<User> response = userRepo.findByUsername(user_name);
+                return response.get();
+
             } 
             throw new RuntimeException("Incorrect username/password");
             
